@@ -24,12 +24,34 @@ load_dotenv(BASE_DIR/'.env')
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-vlc@$+(l4mv%vrn7qig$a7r!qrqh)w+e)7!8r8$o(&9h&gk)c!'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG','False')=='True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1').split(',')
+
+CORS_ALLOWED_ORIGINS = [
+    "https://jalanidhi-website.vercel.app",
+]
+
+SECURE_SSL_REDIRECT = os.getenv(
+    'SECURE_SSL_REDIRECT',
+    'False'
+) == 'True'
+
+SESSION_COOKIE_SECURE = os.getenv(
+    'SESSION_COOKIE_SECURE',
+    'False'
+) == 'True'
+
+CSRF_COOKIE_SECURE = os.getenv(
+    'CSRF_COOKIE_SECURE',
+    'False'
+) == 'True'
+
 
 
 # Application definition
@@ -47,10 +69,12 @@ INSTALLED_APPS = [
     'meter_readings',
     'billing',
     'complaints',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -129,13 +153,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-
-# Email
-# https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
-
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
+MEDIA_URL='media/'
+MEDIA_ROOT=BASE_DIR/'media'
