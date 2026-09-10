@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = [
     "https://jalanidhi-website.vercel.app",
+    "http://localhost:5173",
 ]
 
 SECURE_SSL_REDIRECT = os.getenv(
