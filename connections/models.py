@@ -2,6 +2,27 @@ from django.db import models
 from users.models import User
 
 class Connection(models.Model):
+    STATUS_CHOICES=[
+
+        ("PENDING","pending"),
+        ("APPROVED","approved"),
+        ("REJECTED","rejected"),
+        ("ACTIVE","active"),
+        ("DISCONNECTED","disconnected")
+    ]
+
+    status=models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default="PENDING"
+    )
+
+    consumer_number=models.CharField(
+        max_length=20,
+        unique=True,
+        null=True,blank=True
+    )
+
     user=models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -22,3 +43,10 @@ class Connection(models.Model):
 
     def __str__(self):
         return f"{self.user.name}-{self.house_number}"
+
+
+class ConsumerSequence(models.Model):
+    next_number=models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"Next Consumer Number : {self.next_number}"
