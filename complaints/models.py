@@ -2,6 +2,23 @@ from django.db import models
 from connections.models import Connection
 
 class Complaint(models.Model):
+    STATUS_CHOICES=[
+        ("PENDING","pending"),
+        ("IN_PROGRESS",'in progress'),
+        ("RESOLVED","resolved"),
+        ("REJECTED","rejected"),
+    ]
+
+    status=models.CharField(max_length=20,default="PENDING",choices=STATUS_CHOICES)
+
+    complaint_reference = models.CharField(
+        max_length=20,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+
     connection=models.ForeignKey(
         Connection,
         on_delete=models.CASCADE,
@@ -15,9 +32,14 @@ class Complaint(models.Model):
     area=models.CharField(max_length=50)
     location=models.CharField(max_length=255)
     complaint_details=models.TextField()
-    status=models.CharField(max_length=20,default='PENDING')
     created_at=models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.complaint_type}-{self.mobile_number}"
 
+
+class ComplaintSequence(models.Model):
+    next_number=models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"Next complaint Number : {self.next_number}"
